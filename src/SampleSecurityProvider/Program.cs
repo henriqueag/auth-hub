@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using SampleSecurityProvider.EntityFramework.DbContext;
+using SampleSecurityProvider.ErrorHandling;
 using SampleSecurityProvider.Models;
 using SampleSecurityProvider.Security.Options;
 using SampleSecurityProvider.Security.Services;
@@ -14,6 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((context, logger) => 
     logger.ReadFrom.Configuration(context.Configuration)
 );
+
+builder.Services.AddProblemDetails();
 
 builder.Services.AddDbContext<SqliteDbContext>(
     optionsAction: (_, ctxBuilder) =>
@@ -68,7 +71,12 @@ builder.Services
     .ConfigureOptions<JwtOptionsSetup>()
     .ConfigureOptions<JwtBearerOptionsSetup>();
 
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
 var app = builder.Build();
+
+app.UseExceptionHandler();
+app.UseStatusCodePages();
 
 app.UseSerilogRequestLogging(opt => opt.IncludeQueryInRequestPath = true);
 
@@ -83,5 +91,18 @@ app.UseCors("AllowAll");
 await app.Services.GetRequiredService<DatabaseInitializer>().InitializeAsync();
 
 app.MapControllers();
+
+app.MapGet("api/error", () =>
+{
+    if (true)
+    {
+        throw new ProblemDetailsException("test.error", 404, "Not Found")
+        {
+            Errors = { new Error("inner code", "inner message") }
+        };
+    }
+
+    return Results.Problem();
+});
 
 await app.RunAsync();
