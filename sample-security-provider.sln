@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A6477956-B0D4-422D-A20E-88BC362C6839}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleSecurityProvider", "src\SampleSecurityProvider\SampleSecurityProvider.csproj", "{64FA2D0E-6FAB-48BC-8C40-C3D75F6C7A41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleSecurityProviderUI", "src\SampleSecurityProviderUI\SampleSecurityProviderUI.csproj", "{E1F3CFED-7615-4977-A59C-AEF722F30701}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{64FA2D0E-6FAB-48BC-8C40-C3D75F6C7A41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64FA2D0E-6FAB-48BC-8C40-C3D75F6C7A41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64FA2D0E-6FAB-48BC-8C40-C3D75F6C7A41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64FA2D0E-6FAB-48BC-8C40-C3D75F6C7A41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1F3CFED-7615-4977-A59C-AEF722F30701}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1F3CFED-7615-4977-A59C-AEF722F30701}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1F3CFED-7615-4977-A59C-AEF722F30701}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1F3CFED-7615-4977-A59C-AEF722F30701}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{64FA2D0E-6FAB-48BC-8C40-C3D75F6C7A41} = {A6477956-B0D4-422D-A20E-88BC362C6839}
+		{E1F3CFED-7615-4977-A59C-AEF722F30701} = {A6477956-B0D4-422D-A20E-88BC362C6839}
+	EndGlobalSection
+EndGlobal
