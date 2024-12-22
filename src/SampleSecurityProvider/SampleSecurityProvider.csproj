@@ -23,7 +23,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="Keys\PrivateKey.xml"/>
-        <EmbeddedResource Include="Keys\PublicKey.xml"/>
+      <EmbeddedResource Include="Security\Keys\PrivateKey.xml" />
+      <EmbeddedResource Include="Security\Keys\PublicKey.xml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Users\Dtos\" />
+      <Folder Include="Users\Validators\" />
     </ItemGroup>
 </Project>

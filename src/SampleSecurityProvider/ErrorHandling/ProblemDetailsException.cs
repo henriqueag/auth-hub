@@ -1,8 +1,6 @@
 namespace SampleSecurityProvider.ErrorHandling;
 
-public class ProblemDetailsException(string code, int statusCode, string message) : Exception(message)
+public class ProblemDetailsException(string code, string message, int statusCode) : Exception(message)
 {
-    public string Code { get; } = code;
-    public int StatusCode { get; } = statusCode;
-    public ICollection<Error> Errors { get; } = [];
+    public CustomProblemDetails ProblemDetails => new(code, message, statusCode);
 }

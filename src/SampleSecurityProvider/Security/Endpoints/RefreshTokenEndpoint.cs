@@ -1,23 +1,27 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using SampleSecurityProvider.Models;
+using Microsoft.OpenApi.Models;
+using SampleSecurityProvider.Abstractions;
 using SampleSecurityProvider.Security.Dtos;
 using SampleSecurityProvider.Security.Services;
+using SampleSecurityProvider.Users.Entities;
 
 namespace SampleSecurityProvider.Security.Endpoints;
 
-public class RefreshTokenEndpoint : BaseSecurityEndpoint
+public class RefreshTokenEndpoint : IEndpoint
 {
-    public override void MapEndpoint(IEndpointRouteBuilder app)
+    public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        base.MapEndpoint(app);
-
-        app.MapPost("refresh-token", RefreshTokenAsync);
+        app.MapPost("api/security/refresh-token", RefreshTokenAsync)
+            .WithTags("Security")
+            .WithOpenApi()
+            .DisableAntiforgery()
+            ;
     }
 
     private static async Task<IResult> RefreshTokenAsync(
-        [FromForm] IDictionary<string, string?> payload,
-        UserManager<ApplicationUser> userManager,
+        IFormCollection payload,
+        UserManager<User> userManager,
         IAuthenticationService authService)
     {
         var tokenRequest = new TokenRequest(payload);
@@ -32,7 +36,7 @@ public class RefreshTokenEndpoint : BaseSecurityEndpoint
             return Results.BadRequest("Refresh token required");
         }
         
-        var token = await authService.RefreshTokenAsync(user, tokenRequest.RefreshToken);
+        var token = await authService.RefreshTokenAsync(tokenRequest.RefreshToken);
         return Results.Ok(token);
     }
 }

@@ -2,13 +2,13 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SampleSecurityProvider.Models;
+using SampleSecurityProvider.Users.Entities;
 
-namespace SampleSecurityProvider.Controllers;
+namespace SampleSecurityProvider.Users.Endpoints.Accounts;
 
 [ApiController]
 [Route("api/account")]
-public class AccountController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager) : ControllerBase
+public class AccountController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> CreateAsync([FromBody] CreateUserInputModel inputModel)
@@ -18,7 +18,7 @@ public class AccountController(UserManager<ApplicationUser> userManager, RoleMan
             return BadRequest(ModelState.Values);
         }
 
-        var user = new ApplicationUser(inputModel.Username, inputModel.Email)
+        var user = new User(inputModel.Username, inputModel.Email)
         {
             EmailConfirmed = true
         };
@@ -48,7 +48,7 @@ public class AccountController(UserManager<ApplicationUser> userManager, RoleMan
     [HttpGet]
     public async Task<IActionResult> GetAsync([FromQuery] Guid? userId, [FromQuery] string? email, [FromQuery] string? username)
     {
-        ApplicationUser? userResult;
+        User? userResult;
 
         if (userId.HasValue)
         {
@@ -157,7 +157,7 @@ public record CreateUserInputModel
 
 public record GetUserViewModel
 {
-    public GetUserViewModel(ApplicationUser user)
+    public GetUserViewModel(User user)
     {
         Id = user.Id;
         Username = user.UserName!;

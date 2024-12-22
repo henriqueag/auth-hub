@@ -8,23 +8,14 @@ public class GlobalExceptionHandler(IProblemDetailsService problemDetailsService
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
         if (exception is not ProblemDetailsException ex) return false;
-
-        var problemDetails = new ProblemDetails
-        {
-            Type = ex.Code,
-            Title = ex.Message,
-            Status = ex.StatusCode,
-            Extensions = new Dictionary<string, object?>
-            {
-                { "errors", ex.Errors }
-            }
-        };
+        
+        httpContext.Response.StatusCode = ex.ProblemDetails.Status!.Value;
 
         return await problemDetailsService.TryWriteAsync(new ProblemDetailsContext
         {
             HttpContext = httpContext,
             Exception = ex,
-            ProblemDetails = problemDetails,
+            ProblemDetails = ex.ProblemDetails,
         });
     }
 }
