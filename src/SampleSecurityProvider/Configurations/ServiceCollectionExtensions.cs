@@ -24,6 +24,7 @@ public static class ServiceCollectionExtensions
                 options.Password.RequiredUniqueChars = 0;
             })
             .AddDefaultTokenProviders()
+            .AddErrorDescriber<PortugueseIdentityErrorDescriber>()
             .AddEntityFrameworkStores<SqliteDbContext>();
         
         services

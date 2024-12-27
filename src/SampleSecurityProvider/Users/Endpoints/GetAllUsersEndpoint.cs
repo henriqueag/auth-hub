@@ -55,7 +55,7 @@ public class GetAllUsersEndpoint : IEndpoint
             response.Add(userResponse);
         }
         
-        return TypedResults.Ok(new PaginatedResponse<UserResponse>
+        return Results.Ok(new PaginatedResponse<UserResponse>
         {
             Items = response,
             CurrentPage = page.Value,

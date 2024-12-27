@@ -24,6 +24,8 @@ public class AuthenticationService(
     public async Task<SecurityToken> CreateTokenAsync(User user, string password)
     {
         logger.LogInformation("Iniciando a criação de token para o usuário {UserId}.", user.Id);
+
+        ThrowIfInactiveUser(user);
         
         var passwordMatch = await userManager.CheckPasswordAsync(user, password);
         if (!passwordMatch)
@@ -59,6 +61,8 @@ public class AuthenticationService(
                 StatusCodes.Status401Unauthorized);
         }
 
+        ThrowIfInactiveUser(savedRefreshToken.User!);
+        
         var newToken = await CreateTokenCore(savedRefreshToken.User!);
 
         await refreshTokenRepository.RevokeAsync(savedRefreshToken);
@@ -120,5 +124,16 @@ public class AuthenticationService(
         await refreshTokenRepository.AddAsync(refreshToken);
         
         logger.LogDebug("Refresh token armazenado com sucesso para o usuário {UserId}.", user.Id);
+    }
+
+    private static void ThrowIfInactiveUser(User user)
+    {
+        if (user.Active) return;
+        
+        throw new ProblemDetailsException(
+            "security.authentication-service.user-inactive",
+            $"O acesso para o usuário {user.UserName} foi bloqueado porque a conta está marcada como inativa.",
+            StatusCodes.Status401Unauthorized
+        );
     }
 }
