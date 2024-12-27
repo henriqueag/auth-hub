@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using SampleSecurityProvider.Models;
+using SampleSecurityProvider.Users.Entities;
 
 namespace SampleSecurityProvider.EntityFramework.DbContext;
 
@@ -19,19 +19,19 @@ public class DatabaseInitializer(IServiceScopeFactory factory)
 
     private static async Task SeedAsync(IServiceProvider services)
     {
-        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+        var userManager = services.GetRequiredService<UserManager<User>>();
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-        ApplicationUser[] users =
+        User[] users =
         [
-            new("admin", "admin@email.com") { EmailConfirmed = true },
-            new("test1", "test1@email.com") { EmailConfirmed = true }
+            new("Administrador", "admin", "admin@email.com"),
+            new("Usuário de Teste 1", "test1", "test1@email.com")
         ];
 
         IdentityRole[] roles =
         [
             new("Admin"),
-            new("TReports.Admin")
+            new("Default")
         ];
 
         foreach (var user in users) await userManager.CreateAsync(user, "test@123");
