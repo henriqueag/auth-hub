@@ -1,5 +1,6 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SampleSecurityProvider.Abstractions;
 using SampleSecurityProvider.ErrorHandling;
 using SampleSecurityProvider.Users.Dtos;
@@ -28,44 +29,70 @@ public class CreateUserEndpoint : IEndpoint
         var validationResult = await validator.ValidateAsync(payload, cancellationToken);
         if (!validationResult.IsValid)
         {
-            return TypedResults.BadRequest(new CustomProblemDetails(
+            return Results.BadRequest(new CustomProblemDetails(
                 "users.endpoints.create-user.invalid-data",
                 "Os dados fornecidos para cadastro do usuário estão inválidos.", 
                 StatusCodes.Status400BadRequest,
                 validationResult.Errors.Select(error => new Error(error.ErrorCode, error.ErrorMessage))
             ));
         }
-        
-        var user = new User(payload.DisplayName, payload.Username, payload.Email);
-        
-        await userManager.CreateAsync(user, payload.Password);
-        var assignRolesProblemDetails = await ValidadeAndAssignRolesAsync(user, payload.Roles, roleManager, userManager);
-        
-        return assignRolesProblemDetails is not null 
-            ? TypedResults.BadRequest(assignRolesProblemDetails) 
-            : TypedResults.Created($"api/users?userId={user.Id}", user.Id);
-    }
 
-    private static async Task<CustomProblemDetails?> ValidadeAndAssignRolesAsync(
-        User user,
-        IEnumerable<string> roles,
-        RoleManager<IdentityRole> roleManager,
-        UserManager<User> userManager)
-    {
-        var missingRoles = roles
-            .Where(role => !roleManager.RoleExistsAsync(role).GetAwaiter().GetResult())
-            .ToList();
-
-        if (missingRoles.Count > 0)
+        var roleValidationResult = await ValidateRolesExistAsync(payload.Roles, roleManager);
+        if (!roleValidationResult.IsSuccess)
         {
-            return new CustomProblemDetails(
-                "users.endpoints.create-user.missing-roles",
-                $"As roles {string.Join(", ", missingRoles)} não estão cadastradas.",
-                StatusCodes.Status400BadRequest
+            return Results.BadRequest(roleValidationResult.Error);
+        }
+        
+        var emailAlreadyUsed = await userManager.Users.AnyAsync(x => x.Email == payload.Email, cancellationToken);
+        if (emailAlreadyUsed)
+        {
+            return Results.BadRequest(new CustomProblemDetails(
+                    "users.endpoints.create-user.email-already-used",
+                    "O email já está sendo utilizado por outro usuário.",
+                    StatusCodes.Status400BadRequest
+                )
             );
         }
         
-        await userManager.AddToRolesAsync(user, roles);
-        return null;
+        var user = new User(payload.DisplayName, payload.Username, payload.Email);
+        
+        var creationResult = await userManager.CreateAsync(user, payload.Password);
+        if (!creationResult.Succeeded)
+        {
+            return Results.BadRequest(new CustomProblemDetails(
+                    "users.endpoints.create-user.creation-failed",
+                    "Falha ao cadastrar o usuário, verifique os detalhes.",
+                    StatusCodes.Status400BadRequest,
+                    creationResult.Errors.Select(err => new Error(err.Code, err.Description))
+                )
+            );
+        }
+        
+        await userManager.AddToRolesAsync(user, payload.Roles);
+        
+        return Results.Created($"api/users/{user.Id}", user.Id);
+    }
+    
+    private static async Task<Result> ValidateRolesExistAsync(IEnumerable<string> roles, RoleManager<IdentityRole> roleManager)
+    {
+        var missingRoles = new List<string>();
+        foreach (var role in roles)
+        {
+            if (!await roleManager.RoleExistsAsync(role))
+            {
+                missingRoles.Add(role);
+            }
+        }
+
+        if (missingRoles.Count > 0)
+        {
+            return Result.Failure(new CustomProblemDetails(
+                "users.endpoints.create-user.missing-roles",
+                $"As roles {string.Join(", ", missingRoles)} não estão cadastradas.",
+                StatusCodes.Status400BadRequest)
+            );
+        }
+
+        return Result.Success();
     }
 }
