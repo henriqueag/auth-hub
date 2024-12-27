@@ -4,9 +4,18 @@ namespace SampleSecurityProvider.Users.Entities;
 
 public sealed class User : IdentityUser
 {
-    public User(string username, string email)
+    // Ef Core
+    public User() { }
+    
+    public User(string displayName, string username, string email)
     {
+        DisplayName = displayName;
         UserName = username;
         Email = email;
+        EmailConfirmed = true;
+        Active = true;
     }
+
+    public string DisplayName { get; set; } = null!;
+    public bool Active { get; set; }
 }

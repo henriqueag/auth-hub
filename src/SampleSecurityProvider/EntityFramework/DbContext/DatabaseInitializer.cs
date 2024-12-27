@@ -24,14 +24,14 @@ public class DatabaseInitializer(IServiceScopeFactory factory)
 
         User[] users =
         [
-            new("admin", "admin@email.com") { EmailConfirmed = true },
-            new("test1", "test1@email.com") { EmailConfirmed = true }
+            new("Administrador", "admin", "admin@email.com"),
+            new("Usuário de Teste 1", "test1", "test1@email.com")
         ];
 
         IdentityRole[] roles =
         [
             new("Admin"),
-            new("TReports.Admin")
+            new("Default")
         ];
 
         foreach (var user in users) await userManager.CreateAsync(user, "test@123");

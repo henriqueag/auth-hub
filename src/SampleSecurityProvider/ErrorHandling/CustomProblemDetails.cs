@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SampleSecurityProvider.ErrorHandling;
@@ -17,7 +18,8 @@ public class CustomProblemDetails : ProblemDetails
         };
     }
     
-    public IReadOnlyList<Error> Errors => _errors;
-    
-    public void AddErrors(IEnumerable<Error> errors) => _errors.AddRange(errors);
+    public CustomProblemDetails(string code, string message, int statusCode, IEnumerable<Error> errors) : this(code, message, statusCode)
+    {
+        _errors.AddRange(errors);
+    }
 }

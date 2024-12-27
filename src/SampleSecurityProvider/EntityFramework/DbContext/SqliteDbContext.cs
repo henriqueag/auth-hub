@@ -24,9 +24,15 @@ public sealed class SqliteDbContext(DbContextOptions options) : IdentityDbContex
         builder.Ignore<IdentityRoleClaim<string>>();
         builder.Ignore<IdentityUserLogin<string>>();
         builder.Ignore<IdentityUserToken<string>>();
-        
-        builder.Entity<User>()
-            .ToTable("Users");
+
+        builder.Entity<User>(userBuilder =>
+        {
+            userBuilder.ToTable("Users");
+
+            userBuilder.Property(x => x.DisplayName)
+                .HasMaxLength(128)
+                .IsRequired();
+        });
         
         builder.Entity<IdentityRole>()
             .ToTable("Roles");
@@ -45,6 +51,8 @@ public sealed class SqliteDbContext(DbContextOptions options) : IdentityDbContex
         
         builder.HasKey(x => x.Id);
         builder.HasIndex(x => x.Token);
+
+        builder.Ignore(x => x.IsRevoked);
         
         builder.Property(x => x.Token)
             .HasMaxLength(1024)

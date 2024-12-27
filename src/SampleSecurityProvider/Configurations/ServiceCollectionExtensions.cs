@@ -1,11 +1,14 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SampleSecurityProvider.Abstractions;
 using SampleSecurityProvider.EntityFramework.DbContext;
+using SampleSecurityProvider.EntityFramework.Repositories;
 using SampleSecurityProvider.ErrorHandling;
 using SampleSecurityProvider.Security.Options;
+using SampleSecurityProvider.Security.Repositories;
 using SampleSecurityProvider.Security.Services;
 using SampleSecurityProvider.Users.Entities;
 
@@ -31,6 +34,8 @@ public static class ServiceCollectionExtensions
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
             .AddJwtBearer();
+
+        services.AddAuthorization();
         
         services
             .AddDataProtection()
@@ -49,12 +54,16 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
-        services.AddScoped<IAuthenticationService, AuthenticationService>();
+        services
+            .AddScoped<IAuthenticationService, AuthenticationService>()
+            .AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         
         services
             .AddSingleton<DatabaseInitializer>()
             .AddSingleton<IJwksManager, JwksManager>()
             .AddSingleton<ISecurityTokenManager, SecurityTokenManager>();
+     
+        services.AddValidatorsFromAssembly(typeof(ServiceCollectionExtensions).Assembly);
         
         return services;
     }

@@ -51,7 +51,7 @@ public class AuthenticationService(
                 StatusCodes.Status404NotFound);
         }
 
-        if (savedRefreshToken.IsExpired || savedRefreshToken.IsRevoked)
+        if (savedRefreshToken.IsExpired(TimeSpan.FromSeconds(jwtOptions.Value.RefreshTokenLifetimeInSeconds)) || savedRefreshToken.IsRevoked)
         {
             throw new ProblemDetailsException(
                 "security.authentication-service.refresh-token-expired-or-revoked",
@@ -114,7 +114,6 @@ public class AuthenticationService(
         var refreshToken = new RefreshToken
         {
             Token = refreshTokenValue,
-            Lifetime = TimeSpan.FromSeconds(jwtOptions.Value.RefreshTokenLifetimeInSeconds),
             UserId = user.Id
         };
 

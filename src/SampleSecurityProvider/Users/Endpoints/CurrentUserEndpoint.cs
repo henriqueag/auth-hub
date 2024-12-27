@@ -6,6 +6,10 @@ public class CurrentUserEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
-        throw new NotImplementedException();
+        builder.MapGet("api/current-user", (HttpContext context) =>
+        {
+            var user = context.User.Identity;
+            return "Hii!";
+        });
     }
 }

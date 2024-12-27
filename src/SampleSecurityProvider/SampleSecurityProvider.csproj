@@ -20,15 +20,13 @@
         <PackageReference Include="Serilog.AspNetCore" Version="8.0.3"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0"/>
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.3.0"/>
+        <PackageReference Include="FluentValidation" Version="11.11.0"/>
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0"/>
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="Security\Keys\PrivateKey.xml" />
-      <EmbeddedResource Include="Security\Keys\PublicKey.xml" />
+        <EmbeddedResource Include="Security\Keys\PrivateKey.xml"/>
+        <EmbeddedResource Include="Security\Keys\PublicKey.xml"/>
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Users\Dtos\" />
-      <Folder Include="Users\Validators\" />
-    </ItemGroup>
 </Project>

@@ -30,6 +30,8 @@ namespace SampleSecurityProvider.EntityFramework.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
+                    DisplayName = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
+                    Active = table.Column<bool>(type: "INTEGER", nullable: false),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -77,7 +79,6 @@ namespace SampleSecurityProvider.EntityFramework.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Token = table.Column<string>(type: "TEXT", maxLength: 1024, nullable: false),
-                    Lifetime = table.Column<TimeSpan>(type: "TEXT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     RevokedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
                     UserId = table.Column<string>(type: "TEXT", nullable: false)

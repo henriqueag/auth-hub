@@ -23,7 +23,6 @@ public static class WebApplicationExtensions
 
         await app.Services.GetRequiredService<DatabaseInitializer>().InitializeAsync();
 
-        app.MapControllers();
         app.MapEndpoints();
     }
 }
