@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="MassTransit" Version="8.3.4" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.11"/>
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.11"/>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.11"/>
@@ -27,6 +28,8 @@
     <ItemGroup>
         <EmbeddedResource Include="Security\Keys\PrivateKey.xml"/>
         <EmbeddedResource Include="Security\Keys\PublicKey.xml"/>
+        <EmbeddedResource Include="Email\Templates\TemplatesMap.json" />
+        <EmbeddedResource Include="Email\Templates\PasswordRecovery.html" />
     </ItemGroup>
 
 </Project>

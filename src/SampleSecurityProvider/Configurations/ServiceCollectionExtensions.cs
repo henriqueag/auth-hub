@@ -1,9 +1,11 @@
 using FluentValidation;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SampleSecurityProvider.Abstractions;
+using SampleSecurityProvider.Email;
 using SampleSecurityProvider.EntityFramework.DbContext;
 using SampleSecurityProvider.EntityFramework.Repositories;
 using SampleSecurityProvider.ErrorHandling;
@@ -57,14 +59,20 @@ public static class ServiceCollectionExtensions
     {
         services
             .AddScoped<IAuthenticationService, AuthenticationService>()
-            .AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            .AddScoped<IRefreshTokenRepository, RefreshTokenRepository>()
+            .AddScoped<IEmailSender, EmailSender>()
+            ;
         
         services
             .AddSingleton<DatabaseInitializer>()
             .AddSingleton<IJwksManager, JwksManager>()
-            .AddSingleton<ISecurityTokenManager, SecurityTokenManager>();
+            .AddSingleton<ISecurityTokenManager, SecurityTokenManager>()
+            .AddSingleton<IEmailTemplateReader, EmailTemplateReader>()
+            ;
      
         services.AddValidatorsFromAssembly(typeof(ServiceCollectionExtensions).Assembly);
+
+        services.ConfigureOptions<SmtpOptionsSetup>();
         
         return services;
     }
@@ -101,6 +109,22 @@ public static class ServiceCollectionExtensions
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
 
+        return services;
+    }
+
+    public static IServiceCollection AddInMemoryBus(this IServiceCollection services)
+    {
+        services.AddMassTransit(busConfigurator =>
+        {
+            busConfigurator.SetKebabCaseEndpointNameFormatter();
+            busConfigurator.AddConsumers(typeof(ServiceCollectionExtensions).Assembly);
+
+            busConfigurator.UsingInMemory((context, configurator) =>
+            {
+                configurator.ConfigureEndpoints(context);
+            });
+        });
+        
         return services;
     }
 }
