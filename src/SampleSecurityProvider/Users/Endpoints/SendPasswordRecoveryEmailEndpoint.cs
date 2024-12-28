@@ -1,3 +1,4 @@
+using System.Web;
 using MassTransit;
 using Microsoft.AspNetCore.Identity;
 using SampleSecurityProvider.Abstractions;
@@ -45,7 +46,7 @@ public class SendPasswordRecoveryEmailEndpoint : IEndpoint
         var recoveryToken = await userManager.GeneratePasswordResetTokenAsync(user);
 
         var request = context.Request;
-        var link = $"{request.Scheme}://{request.Host}/api/users/password/recovery?email={user.Email}&token={recoveryToken}";
+        var link = $"{request.Scheme}://{request.Host}/api/users/password/recovery?email={user.Email}&token={HttpUtility.UrlEncode(recoveryToken)}";
 
         await bus.Publish(new PasswordRecoveryEmailRequested(user, link) as object);
         
