@@ -47,17 +47,14 @@ public class UpdateUserEndpoint : IEndpoint
             ));
         }
         
-        var roleValidationResult = await ValidateRolesExistAsync(payload.Roles, roleManager);
+        var roleValidationResult = await ValidateRolesExistAsync(payload.RolesToAdd, roleManager);
         if (!roleValidationResult.IsSuccess)
         {
             return Results.BadRequest(roleValidationResult.Error);
         }
 
-        var roleAssignmentResult  = await TryAssignRolesAsync(payload.Roles, user, userManager);
-        if (!roleAssignmentResult.IsSuccess)
-        {
-            return Results.BadRequest(roleAssignmentResult.Error);
-        }
+        await AddRolesAsync(payload.RolesToAdd, user, userManager);
+        await RemoveRolesAsync(payload.RolesToRemove, user, userManager);
         
         user.DisplayName = payload.DisplayName;
         user.UserName = payload.Username;
@@ -97,7 +94,7 @@ public class UpdateUserEndpoint : IEndpoint
         {
             return Result.Failure(new CustomProblemDetails(
                 "users.endpoints.update-user.missing-roles",
-                $"As roles {string.Join(", ", missingRoles)} não estão cadastradas.",
+                $"As roles {string.Join(", ", missingRoles.Select(role => $"'{role}'"))} não estão cadastradas.",
                 StatusCodes.Status400BadRequest)
             );
         }
@@ -105,19 +102,28 @@ public class UpdateUserEndpoint : IEndpoint
         return Result.Success();
     }
     
-    private static async Task<Result> TryAssignRolesAsync(IEnumerable<string> roles, User user, UserManager<User> userManager)
+    private static async Task AddRolesAsync(IEnumerable<string> roles, User user, UserManager<User> userManager)
     {
-        var result = await userManager.AddToRolesAsync(user, roles);
-        if (!result.Succeeded)
+        foreach (var role in roles)
         {
-            return Result.Failure(new CustomProblemDetails(
-                "users.endpoints.update-user.user-already-in-roles",
-                result.Errors.Select(err => err.Description).First(),
-                StatusCodes.Status400BadRequest)
-            );
+            var isInRole = await userManager.IsInRoleAsync(user, role);
+            if (!isInRole)
+            {
+                await userManager.AddToRoleAsync(user, role);
+            }
         }
+    }
 
-        return Result.Success();
+    private static async Task RemoveRolesAsync(IEnumerable<string> roles, User user, UserManager<User> userManager)
+    {
+        foreach (var role in roles)
+        {
+            var isInRole = await userManager.IsInRoleAsync(user, role);
+            if (isInRole)
+            {
+                await userManager.RemoveFromRoleAsync(user, role);
+            }
+        }
     }
     
     private static async Task<Result> UpdateEmailIfNeededAsync(UpdateUserRequest payload, User user, UserManager<User> userManager, CancellationToken cancellationToken)

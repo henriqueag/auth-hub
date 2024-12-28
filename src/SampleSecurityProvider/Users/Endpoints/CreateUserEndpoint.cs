@@ -23,8 +23,7 @@ public class CreateUserEndpoint : IEndpoint
         IValidator<CreateUserRequest> validator,
         UserManager<User> userManager,
         RoleManager<IdentityRole> roleManager,
-        CancellationToken cancellationToken
-        )
+        CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(payload, cancellationToken);
         if (!validationResult.IsValid)
@@ -56,7 +55,7 @@ public class CreateUserEndpoint : IEndpoint
         
         var user = new User(payload.DisplayName, payload.Username, payload.Email);
         
-        var creationResult = await userManager.CreateAsync(user, payload.Password);
+        var creationResult = await userManager.CreateAsync(user);
         if (!creationResult.Succeeded)
         {
             return Results.BadRequest(new CustomProblemDetails(
