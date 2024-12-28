@@ -12,7 +12,8 @@ builder.Services
     .AddDatabase()
     .AddErrorHandling()
     .AddSecurity()
-    .AddServices();
+    .AddServices()
+    .AddInMemoryBus();
 
 var app = builder.Build();
 
