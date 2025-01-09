@@ -17,7 +17,8 @@ public class SendEmailOnPasswordRecoveryRequested(IEmailSender emailSender) : IC
             new Dictionary<string, string>
             {
                 { "User", message.User.DisplayName },
-                { "Link", message.Link }
+                { "Link", message.Link },
+                { "FullLink", message.Link }
             }, 
             token
         );
