@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace AuthHub.Infrastructure.Security;
+namespace AuthHub.Domain.Security.ValueObjects;
 
 public class PortugueseIdentityErrorDescriber : IdentityErrorDescriber
 {

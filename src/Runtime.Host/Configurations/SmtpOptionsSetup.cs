@@ -1,6 +1,7 @@
+using AuthHub.Domain.Email;
 using Microsoft.Extensions.Options;
 
-namespace SampleSecurityProvider.Email;
+namespace AuthHub.Runtime.Host.Configurations;
 
 public class SmtpOptionsSetup(IConfiguration configuration) : IConfigureOptions<SmtpOptions>
 {

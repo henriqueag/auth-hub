@@ -1,6 +1,3 @@
 namespace AuthHub.Domain.Abstractions;
 
-public interface IDomainEvent
-{
-    
-}
+public interface IDomainEvent;

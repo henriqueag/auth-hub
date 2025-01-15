@@ -4,7 +4,7 @@ using AuthHub.Domain.Users.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
-namespace AuthHub.Application.Queries.Users.GetUserById;
+namespace AuthHub.Application.Queries.Users.GetById;
 
 public class GetByIdQueryHandler(UserManager<User> userManager) : IRequestHandler<GetByIdQuery, UserResponse>
 {

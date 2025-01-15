@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace SampleSecurityProvider.EntityFramework.Migrations
+namespace AuthHub.Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration

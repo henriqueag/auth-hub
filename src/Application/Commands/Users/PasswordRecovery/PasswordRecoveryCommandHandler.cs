@@ -7,7 +7,10 @@ using Microsoft.AspNetCore.Identity;
 
 namespace AuthHub.Application.Commands.Users.PasswordRecovery;
 
-public class PasswordRecoveryCommandHandler(UserManager<User> userManager, IValidator<PasswordRequest> validator) : IRequestHandler<PasswordRecoveryCommand>
+public class PasswordRecoveryCommandHandler(
+    UserManager<User> userManager, 
+    IValidator<PasswordRequest> validator)
+    : IRequestHandler<PasswordRecoveryCommand>
 {
     public async Task Handle(PasswordRecoveryCommand request, CancellationToken cancellationToken)
     {

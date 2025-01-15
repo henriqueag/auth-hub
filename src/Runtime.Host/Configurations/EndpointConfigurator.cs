@@ -1,3 +1,4 @@
+using AuthHub.Runtime.Host.Endpoints;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace AuthHub.Runtime.Host.Configurations;

@@ -1,4 +1,4 @@
-using SampleSecurityProvider.Configurations;
+using AuthHub.Runtime.Host.Configurations;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,13 +7,7 @@ builder.Host.UseSerilog((context, logger) =>
     logger.ReadFrom.Configuration(context.Configuration)
 );
 
-builder.Services
-    .AddPresentation()
-    .AddDatabase()
-    .AddErrorHandling()
-    .AddSecurity()
-    .AddServices()
-    .AddInMemoryBus();
+builder.Services.ConfigureServices();
 
 var app = builder.Build();
 

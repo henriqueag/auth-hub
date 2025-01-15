@@ -1,6 +1,6 @@
 using System.Security.Claims;
 
-namespace SampleSecurityProvider.Security.Services;
+namespace AuthHub.Domain.Security.Services;
 
 public interface ISecurityTokenManager
 {

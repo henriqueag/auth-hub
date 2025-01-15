@@ -1,4 +1,4 @@
-namespace SampleSecurityProvider.Email;
+namespace AuthHub.Domain.Email;
 
 public static class EmailTemplateNames
 {

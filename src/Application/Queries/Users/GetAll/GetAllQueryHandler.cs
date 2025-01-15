@@ -4,6 +4,7 @@ using AuthHub.Domain.Users.Entities;
 using AuthHub.Domain.Users.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace AuthHub.Application.Queries.Users.GetAll;
 
@@ -19,11 +20,10 @@ public class GetAllQueryHandler(IUserRepository userRepository, UserManager<User
         var totalItems = await userRepository.CountAsync(cancellationToken);
         var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
-        var paginatedData = query
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToList()
-            ;
+        var paginatedData = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
         
         var response = new List<UserResponse>();
         

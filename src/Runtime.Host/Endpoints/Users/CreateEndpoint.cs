@@ -1,9 +1,10 @@
 using AuthHub.Application.Commands.Users.Create;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AuthHub.Runtime.Host.Endpoints.Users;
 
-public class CreateUserEndpoint : IEndpoint
+public class CreateEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
@@ -13,8 +14,9 @@ public class CreateUserEndpoint : IEndpoint
             .RequireAuthorization(policy => policy.RequireRole("Admin"));
     }
 
-    private static async Task<IResult> CreateUserAsync(CreateCommand command, ISender sender, CancellationToken cancellationToken)
+    private static async Task<IResult> CreateUserAsync(HttpContext context, ISender sender, CreateCommand command, CancellationToken cancellationToken)
     {
+        command = command with { Link = $"{context.Request.Scheme}://{context.Request.Host}/api/users/password/recovery" };
         var result = await sender.Send(command, cancellationToken);
         return Results.Created($"api/users/{result}", result);
     }

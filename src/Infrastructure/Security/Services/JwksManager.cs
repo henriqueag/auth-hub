@@ -1,9 +1,10 @@
 using System.Security.Cryptography;
 using AuthHub.Domain.Security.Options;
+using AuthHub.Domain.Security.Services;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace AuthHub.Domain.Security.Services;
+namespace AuthHub.Infrastructure.Security.Services;
 
 public class JwksManager(IOptions<JwtOptions> jwtOptions) : IJwksManager
 {

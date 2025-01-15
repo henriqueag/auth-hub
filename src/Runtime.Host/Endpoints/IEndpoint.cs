@@ -1,6 +1,6 @@
 namespace AuthHub.Runtime.Host.Endpoints;
 
-public class IEndpoint
+public interface IEndpoint
 {
-    
+    void MapEndpoint(IEndpointRouteBuilder builder);
 }

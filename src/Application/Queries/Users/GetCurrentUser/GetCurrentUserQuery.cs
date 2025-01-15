@@ -3,4 +3,4 @@ using MediatR;
 
 namespace AuthHub.Application.Queries.Users.GetCurrentUser;
 
-public record GetCurrentUserCommand : IRequest<UserResponse>;
+public record GetCurrentUserQuery : IRequest<UserResponse>;

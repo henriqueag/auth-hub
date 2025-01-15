@@ -1,24 +1,69 @@
+using AuthHub.Application.Commands.Users;
+using AuthHub.Application.Commands.Users.ChangePassword;
+using AuthHub.Domain.Email;
+using AuthHub.Domain.Security.Repositories;
+using AuthHub.Domain.Security.Services;
+using AuthHub.Domain.Security.ValueObjects;
+using AuthHub.Domain.Users.Entities;
+using AuthHub.Infrastructure.Data.Contexts;
+using AuthHub.Infrastructure.Data.Repositories;
+using AuthHub.Infrastructure.Security.Services;
+using AuthHub.Runtime.Host.ErrorHandling;
 using FluentValidation;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using SampleSecurityProvider.Abstractions;
-using SampleSecurityProvider.Email;
-using SampleSecurityProvider.EntityFramework.DbContext;
-using SampleSecurityProvider.EntityFramework.Repositories;
-using SampleSecurityProvider.ErrorHandling;
-using SampleSecurityProvider.Security.Options;
-using SampleSecurityProvider.Security.Repositories;
-using SampleSecurityProvider.Security.Services;
-using SampleSecurityProvider.Users.Entities;
 
-namespace SampleSecurityProvider.Configurations;
+namespace AuthHub.Runtime.Host.Configurations;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddSecurity(this IServiceCollection services)
+    public static void ConfigureServices(this IServiceCollection services)
+    {
+        services.AddPresentation()
+            .AddServices()
+            .AddSecurity()
+            .AddDatabase()
+            .AddInMemoryBus()
+            .AddErrorHandling();
+    }
+    
+    private static IServiceCollection AddPresentation(this IServiceCollection services)
+    {
+        services.AddEndpoints();
+        services.AddEndpointsApiExplorer();
+        services.AddSwaggerGen();
+
+        return services;
+    }
+    
+    private static IServiceCollection AddServices(this IServiceCollection services)
+    {
+        services
+            .AddScoped<IAuthenticationService, AuthenticationService>()
+            .AddScoped<IRefreshTokenRepository, RefreshTokenRepository>()
+            .AddScoped<IEmailSender, EmailSender>()
+            ;
+        
+        services
+            .AddSingleton<DatabaseInitializer>()
+            .AddSingleton<IJwksManager, JwksManager>()
+            .AddSingleton<ISecurityTokenManager, SecurityTokenManager>()
+            .AddSingleton<IEmailTemplateReader, EmailTemplateReader>()
+            ;
+     
+        services.AddValidatorsFromAssembly(typeof(ChangePasswordCommand).Assembly);
+        services.AddHttpContextAccessor();
+        services.AddDistributedMemoryCache();
+        
+        services.ConfigureOptions<SmtpOptionsSetup>();
+        
+        return services;
+    }
+    
+    private static IServiceCollection AddSecurity(this IServiceCollection services)
     {
         services.AddIdentity<User, IdentityRole>(options =>
             {
@@ -42,7 +87,7 @@ public static class ServiceCollectionExtensions
         
         services
             .AddDataProtection()
-            .SetApplicationName("SampleSecurityProvider");
+            .SetApplicationName("AuthHub");
 
         services.AddCors(options =>
             options.AddPolicy("AllowAll", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader())
@@ -54,39 +99,8 @@ public static class ServiceCollectionExtensions
         
         return services;
     }
-
-    public static IServiceCollection AddServices(this IServiceCollection services)
-    {
-        services
-            .AddScoped<IAuthenticationService, AuthenticationService>()
-            .AddScoped<IRefreshTokenRepository, RefreshTokenRepository>()
-            .AddScoped<IEmailSender, EmailSender>()
-            ;
-        
-        services
-            .AddSingleton<DatabaseInitializer>()
-            .AddSingleton<IJwksManager, JwksManager>()
-            .AddSingleton<ISecurityTokenManager, SecurityTokenManager>()
-            .AddSingleton<IEmailTemplateReader, EmailTemplateReader>()
-            ;
-     
-        services.AddValidatorsFromAssembly(typeof(ServiceCollectionExtensions).Assembly);
-
-        services.ConfigureOptions<SmtpOptionsSetup>();
-        
-        return services;
-    }
-    
-    public static IServiceCollection AddErrorHandling(this IServiceCollection services)
-    {
-        services
-            .AddProblemDetails()
-            .AddExceptionHandler<GlobalExceptionHandler>();
-        
-        return services;
-    }
-
-    public static IServiceCollection AddDatabase(this IServiceCollection services)
+ 
+    private static IServiceCollection AddDatabase(this IServiceCollection services)
     {
         services.AddDbContext<SqliteDbContext>(
             optionsAction: (_, ctxBuilder) =>
@@ -103,16 +117,7 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddPresentation(this IServiceCollection services)
-    {
-        services.AddEndpoints();
-        services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
-
-        return services;
-    }
-
-    public static IServiceCollection AddInMemoryBus(this IServiceCollection services)
+    private static IServiceCollection AddInMemoryBus(this IServiceCollection services)
     {
         services.AddMassTransit(busConfigurator =>
         {
@@ -124,6 +129,15 @@ public static class ServiceCollectionExtensions
                 configurator.ConfigureEndpoints(context);
             });
         });
+        
+        return services;
+    }
+    
+    private static IServiceCollection AddErrorHandling(this IServiceCollection services)
+    {
+        services
+            .AddProblemDetails()
+            .AddExceptionHandler<GlobalExceptionHandler>();
         
         return services;
     }

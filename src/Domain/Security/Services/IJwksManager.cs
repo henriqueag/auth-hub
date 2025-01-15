@@ -1,6 +1,6 @@
 using Microsoft.IdentityModel.Tokens;
 
-namespace SampleSecurityProvider.Security.Services;
+namespace AuthHub.Domain.Security.Services;
 
 public interface IJwksManager
 {

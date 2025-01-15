@@ -1,7 +1,7 @@
 using System.Collections.Concurrent;
 using System.Text.Json;
 
-namespace SampleSecurityProvider.Email;
+namespace AuthHub.Domain.Email;
 
 public class EmailTemplateReader : IEmailTemplateReader
 {
@@ -52,9 +52,4 @@ public class EmailTemplateReader : IEmailTemplateReader
 
         return templates;
     }
-}
-
-public record TemplateInfo(string Subject, string Path, IEnumerable<string> Variables)
-{
-    public string? Html { get; set; }
 }

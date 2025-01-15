@@ -1,7 +1,8 @@
 using AuthHub.Application.Commands.Users.ChangePassword;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
-namespace AuthHub.Runtime.Host.Endpoints;
+namespace AuthHub.Runtime.Host.Endpoints.Users;
 
 public class ChangePasswordEndpoint : IEndpoint
 {
@@ -14,7 +15,7 @@ public class ChangePasswordEndpoint : IEndpoint
             .RequireAuthorization();
     }
 
-    private static async Task<IResult> ChangePasswordAsync(ChangePasswordCommand payload, ISender sender, CancellationToken cancellationToken)
+    private static async Task<IResult> ChangePasswordAsync(ISender sender, ChangePasswordCommand payload, CancellationToken cancellationToken)
     {
         await sender.Send(payload, cancellationToken);
         return Results.NoContent();

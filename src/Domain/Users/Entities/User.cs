@@ -1,7 +1,7 @@
 using AuthHub.Domain.Abstractions;
 using Microsoft.AspNetCore.Identity;
 
-namespace AuthHub.Domain.Users;
+namespace AuthHub.Domain.Users.Entities;
 
 public sealed class User : IdentityUser
 {
@@ -22,10 +22,14 @@ public sealed class User : IdentityUser
     public string DisplayName { get; set; } = null!;
     public bool Active { get; set; }
     public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents;
-    
-    public void AddDomainEvent(IDomainEvent domainEvent) 
-        => _domainEvents.Add(domainEvent);
-    
+
+    public void AddDomainEvent(IDomainEvent domainEvent)
+    {
+        _domainEvents.Add(domainEvent);
+    }
+
     public void ClearDomainEvents()
-        => _domainEvents.Clear();
+    {
+        _domainEvents.Clear();
+    }
 }

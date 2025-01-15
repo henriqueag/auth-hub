@@ -1,5 +1,6 @@
 using AuthHub.Application.Commands.Users.Update;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AuthHub.Runtime.Host.Endpoints.Users;
 
@@ -13,7 +14,7 @@ public class UpdateEndpoint : IEndpoint
             .RequireAuthorization(policy => policy.RequireRole("Admin"));
     }
 
-    private static async Task<IResult> UpdateUserAsync(Guid userId, UpdateCommand payload, ISender sender, CancellationToken cancellationToken)
+    private static async Task<IResult> UpdateUserAsync(Guid userId, UpdateCommand payload, [FromServices] ISender sender, CancellationToken cancellationToken)
     {
         payload = payload with { UserId = userId };
         await sender.Send(payload, cancellationToken);

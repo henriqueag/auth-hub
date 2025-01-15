@@ -1,3 +1,4 @@
+using AuthHub.Application.Dtos.Users;
 using AuthHub.Domain.Abstractions;
 using AuthHub.Domain.Users.Entities;
 using FluentValidation;
@@ -5,12 +6,12 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
-namespace AuthHub.Application.Commands.Users;
+namespace AuthHub.Application.Commands.Users.ChangePassword;
 
 public class ChangePasswordCommandHandler(
     IHttpContextAccessor httpContextAccessor,
     UserManager<User> userManager,
-    IValidator<ChangePasswordCommand> validator)
+    IValidator<PasswordRequest> validator)
     : IRequestHandler<ChangePasswordCommand>
 {
     public async Task Handle(ChangePasswordCommand request, CancellationToken cancellationToken)

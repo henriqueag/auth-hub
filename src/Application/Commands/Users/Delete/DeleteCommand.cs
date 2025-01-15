@@ -1,6 +1,5 @@
+using MediatR;
+
 namespace AuthHub.Application.Commands.Users.Delete;
 
-public class DeleteCommand
-{
-    
-}
+public record DeleteCommand(Guid UserId) : IRequest;

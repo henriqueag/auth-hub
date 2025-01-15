@@ -1,8 +1,10 @@
+using AuthHub.Domain.Security.Options;
+using AuthHub.Domain.Security.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
-using SampleSecurityProvider.Security.Services;
 
-namespace AuthHub.Domain.Security.Options;
+namespace AuthHub.Runtime.Host.Configurations;
 
 public class JwtBearerOptionsSetup(IOptions<JwtOptions> jwtOptions, IJwksManager jwksManager) : IConfigureNamedOptions<JwtBearerOptions>
 {

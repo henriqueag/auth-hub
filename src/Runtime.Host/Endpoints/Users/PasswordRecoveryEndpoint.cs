@@ -12,7 +12,7 @@ public class PasswordRecoveryEndpoint : IEndpoint
             .WithOpenApi();
     }
 
-    private static async Task<IResult> PasswordRecoveryAsync(string email, string token, PasswordRecoveryCommand command, ISender sender, CancellationToken cancellationToken)
+    private static async Task<IResult> PasswordRecoveryAsync(string email, string token, ISender sender, PasswordRecoveryCommand command, CancellationToken cancellationToken)
     {
         await sender.Send(new PasswordRecoveryCommand(email, token), cancellationToken);
         return Results.Ok();

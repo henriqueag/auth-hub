@@ -1,7 +1,7 @@
+using AuthHub.Domain.Security.ValueObjects;
 using AuthHub.Domain.Users.Entities;
-using SecurityToken = SecurityToken;
 
-namespace SampleSecurityProvider.Security.Services;
+namespace AuthHub.Domain.Security.Services;
 
 public interface IAuthenticationService
 {

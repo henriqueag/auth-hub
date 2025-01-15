@@ -1,7 +1,7 @@
-using Microsoft.Extensions.Configuration;
+using AuthHub.Domain.Security.Options;
 using Microsoft.Extensions.Options;
 
-namespace AuthHub.Domain.Security.Options;
+namespace AuthHub.Runtime.Host.Configurations;
 
 public class JwtOptionsSetup(IConfiguration configuration) : IConfigureOptions<JwtOptions>
 {

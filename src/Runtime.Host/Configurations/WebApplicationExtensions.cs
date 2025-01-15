@@ -1,8 +1,7 @@
-using SampleSecurityProvider.Abstractions;
-using SampleSecurityProvider.EntityFramework.DbContext;
+using AuthHub.Infrastructure.Data.Contexts;
 using Serilog;
 
-namespace SampleSecurityProvider.Configurations;
+namespace AuthHub.Runtime.Host.Configurations;
 
 public static class WebApplicationExtensions
 {

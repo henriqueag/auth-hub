@@ -1,6 +1,3 @@
 namespace AuthHub.Application.Dtos.Users;
 
-public class UserResponse
-{
-    
-}
+public record UserResponse(Guid Id, string DisplayName, string Username, string Email, bool Active, IEnumerable<string> Roles, string? Issuer = null);
