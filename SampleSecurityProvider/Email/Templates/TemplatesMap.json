@@ -1,0 +1,7 @@
+{
+    "PasswordRecovery": {
+        "Subject": "Redefinição de Senha",
+        "Path": "Email/Templates/PasswordRecovery.html",
+        "Variables": ["User", "Link", "FullLink"]
+    }
+}
