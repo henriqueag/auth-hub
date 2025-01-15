@@ -1,9 +1,10 @@
 using System.Net;
 using System.Net.Mail;
 using System.Text;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace SampleSecurityProvider.Email;
+namespace AuthHub.Domain.Email;
 
 public class EmailSender(
     IOptions<SmtpOptions> smtpOptions,

@@ -5,7 +5,7 @@ using AuthHub.Domain.Security.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace SampleSecurityProvider.Security.Services;
+namespace AuthHub.Domain.Security.Services;
 
 public class SecurityTokenManager(IJwksManager jwksManager, IOptions<JwtOptions> jwtOptions) : ISecurityTokenManager
 {
