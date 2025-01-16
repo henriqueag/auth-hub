@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 using AuthHub.Domain.Security.Services;
 using Microsoft.IdentityModel.Tokens;
 
-namespace AuthHub.Infrastructure.Security.Services;
+namespace AuthHub.Infrastructure.Security.Services.Services;
 
 public class JwksManager : IJwksManager
 {

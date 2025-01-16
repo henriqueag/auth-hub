@@ -1,13 +1,9 @@
-using System.Web;
 using AuthHub.Application.Commands.Users.SendPasswordRecoveryEmail;
 using AuthHub.Domain.Abstractions;
 using AuthHub.Domain.Users.Entities;
-using AuthHub.Domain.Users.Events;
 using FluentValidation;
-using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace AuthHub.Application.Commands.Users.Create;
 
@@ -31,7 +27,7 @@ public class CreateCommandHandler(
         
         await ValidateRolesExistAsync(request.Roles, roleManager);
         
-        var emailAlreadyUsed = await userManager.Users.AnyAsync(x => x.Email == request.Email, cancellationToken);
+        var emailAlreadyUsed = userManager.Users.Any(x => x.Email == request.Email);
         if (emailAlreadyUsed)
         {
             throw new ProblemDetailsException(

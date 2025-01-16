@@ -1,6 +1,5 @@
 using System.Collections.Concurrent;
 using System.Text.Json;
-using AuthHub.Domain.Email;
 
 namespace AuthHub.Infrastructure.Email;
 

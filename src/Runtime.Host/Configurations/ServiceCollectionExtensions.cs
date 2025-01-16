@@ -1,4 +1,5 @@
 using AuthHub.Application.Commands.Users.ChangePassword;
+using AuthHub.Domain.Abstractions;
 using AuthHub.Domain.Email;
 using AuthHub.Domain.Security.Repositories;
 using AuthHub.Domain.Security.Services;
@@ -9,6 +10,7 @@ using AuthHub.Infrastructure.Data.Contexts;
 using AuthHub.Infrastructure.Data.Repositories;
 using AuthHub.Infrastructure.Email;
 using AuthHub.Infrastructure.Security.Services;
+using AuthHub.Infrastructure.Security.Services.Services;
 using AuthHub.Runtime.Host.ErrorHandling;
 using FluentValidation;
 using MassTransit;

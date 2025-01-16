@@ -1,4 +1,4 @@
-using AuthHub.Domain.Email;
+using AuthHub.Infrastructure.Email;
 using Microsoft.Extensions.Options;
 
 namespace AuthHub.Runtime.Host.Configurations;

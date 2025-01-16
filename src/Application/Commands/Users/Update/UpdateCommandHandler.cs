@@ -3,7 +3,6 @@ using AuthHub.Domain.Users.Entities;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace AuthHub.Application.Commands.Users.Update;
 
@@ -105,7 +104,7 @@ public class UpdateCommandHandler(
     {
         if (user.Email == payload.Email) return;
         
-        var emailAlreadyUsed = await userManager.Users.AnyAsync(x => x.Email == payload.Email, cancellationToken);
+        var emailAlreadyUsed = userManager.Users.Any(x => x.Email == payload.Email);
         if (emailAlreadyUsed)
         {
             throw new ProblemDetailsException(

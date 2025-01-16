@@ -4,6 +4,7 @@ using AuthHub.Domain.Abstractions;
 using AuthHub.Domain.Security.Entities;
 using AuthHub.Domain.Security.Options;
 using AuthHub.Domain.Security.Repositories;
+using AuthHub.Domain.Security.Services;
 using AuthHub.Domain.Users.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -11,15 +12,15 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SecurityToken = AuthHub.Domain.Security.ValueObjects.SecurityToken;
 
-namespace AuthHub.Domain.Security.Services;
+namespace AuthHub.Infrastructure.Security.Services.Services;
 
 public class AuthenticationService(
     UserManager<User> userManager,
     ISecurityTokenManager tokenManager,
     IRefreshTokenRepository refreshTokenRepository,
     IOptions<JwtOptions> jwtOptions,
-    ILogger<AuthenticationService> logger
-) : IAuthenticationService
+    ILogger<AuthenticationService> logger) 
+    : IAuthenticationService
 {
     public async Task<SecurityToken> CreateTokenAsync(User user, string password)
     {
@@ -31,7 +32,7 @@ public class AuthenticationService(
         if (!passwordMatch)
         {
             throw new ProblemDetailsException(
-                "security.authentication-service.invalid-credentials",
+                "infra.security.authentication-service.invalid-credentials",
                 "As credenciais fornecidas estão incorretas.",
                 Error.Unauthorized);
         }
@@ -47,7 +48,7 @@ public class AuthenticationService(
         if (savedRefreshToken is null)
         {
             throw new ProblemDetailsException(
-                "security.authentication-service.refresh-token-not-found",
+                "infra.security.authentication-service.refresh-token-not-found",
                 "O token de atualização fornecido não foi encontrado.",
                 Error.NotFound);
         }
@@ -55,7 +56,7 @@ public class AuthenticationService(
         if (savedRefreshToken.IsExpired(TimeSpan.FromSeconds(jwtOptions.Value.RefreshTokenLifetimeInSeconds)) || savedRefreshToken.IsRevoked)
         {
             throw new ProblemDetailsException(
-                "security.authentication-service.refresh-token-expired-or-revoked",
+                "infra.security.authentication-service.refresh-token-expired-or-revoked",
                 "O token de atualização fornecido está expirado ou foi revogado. Solicite um novo token de acesso.", 
                 Error.Unauthorized);
         }
@@ -130,7 +131,7 @@ public class AuthenticationService(
         if (user.Active) return;
         
         throw new ProblemDetailsException(
-            "security.authentication-service.user-inactive",
+            "infra.security.authentication-service.user-inactive",
             $"O acesso para o usuário {user.UserName} foi bloqueado porque a conta está marcada como inativa.",
             Error.Unauthorized
         );

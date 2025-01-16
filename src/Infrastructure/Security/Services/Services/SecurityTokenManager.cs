@@ -1,11 +1,12 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using AuthHub.Domain.Security.Options;
+using AuthHub.Domain.Security.Services;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using SampleSecurityProvider.Security.Options;
 
-namespace SampleSecurityProvider.Security.Services;
+namespace AuthHub.Infrastructure.Security.Services.Services;
 
 public class SecurityTokenManager(IJwksManager jwksManager, IOptions<JwtOptions> jwtOptions) : ISecurityTokenManager
 {

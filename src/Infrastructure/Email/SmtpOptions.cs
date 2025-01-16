@@ -1,4 +1,4 @@
-namespace AuthHub.Domain.Email;
+namespace AuthHub.Infrastructure.Email;
 
 public class SmtpOptions
 {
