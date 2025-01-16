@@ -1,7 +1,8 @@
 using System.Collections.Concurrent;
 using System.Text.Json;
+using AuthHub.Domain.Email;
 
-namespace AuthHub.Domain.Email;
+namespace AuthHub.Infrastructure.Email;
 
 public class EmailTemplateReader : IEmailTemplateReader
 {
@@ -41,12 +42,9 @@ public class EmailTemplateReader : IEmailTemplateReader
         
         foreach (var (key, value) in templatesMap)
         {
-            if (!File.Exists(value.Path))
-            {
-                throw new FileNotFoundException($"O arquivo de template de email não foi encontrado no diretório {value.Path}");
-            }
-            
-            value.Html = File.ReadAllText(value.Path);
+            var templateStream = assembly.GetManifestResourceStream($"AuthHub.Infrastructure.Email.Templates.{value.FileName}");
+            var streamReader = new StreamReader(templateStream!);
+            value.Html = streamReader.ReadToEnd();
             templates.TryAdd(key, value);
         }
 

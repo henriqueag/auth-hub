@@ -14,7 +14,7 @@ public class CreateEndpoint : IEndpoint
             .RequireAuthorization(policy => policy.RequireRole("Admin"));
     }
 
-    private static async Task<IResult> CreateUserAsync(HttpContext context, ISender sender, CreateCommand command, CancellationToken cancellationToken)
+    private static async Task<IResult> CreateUserAsync(HttpContext context, [FromServices] ISender sender, CreateCommand command, CancellationToken cancellationToken)
     {
         command = command with { Link = $"{context.Request.Scheme}://{context.Request.Host}/api/users/password/recovery" };
         var result = await sender.Send(command, cancellationToken);

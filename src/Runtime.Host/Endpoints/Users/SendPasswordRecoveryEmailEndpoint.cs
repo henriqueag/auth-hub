@@ -1,6 +1,6 @@
 using AuthHub.Application.Commands.Users.SendPasswordRecoveryEmail;
-using MassTransit;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AuthHub.Runtime.Host.Endpoints.Users;
 
@@ -13,7 +13,7 @@ public class SendPasswordRecoveryEmailEndpoint : IEndpoint
             .WithOpenApi();
     }
 
-    private static async Task<IResult> SendPasswordRecoveryEmailAsync(HttpContext context, ISender sender, SendPasswordRecoveryEmailCommand command,  CancellationToken cancellationToken)
+    private static async Task<IResult> SendPasswordRecoveryEmailAsync(HttpContext context, [FromServices] ISender sender, SendPasswordRecoveryEmailCommand command, CancellationToken cancellationToken)
     {
         command = command with { Link = $"{context.Request.Scheme}://{context.Request.Host}/api/users/password/recovery" };
         await sender.Send(command, cancellationToken);

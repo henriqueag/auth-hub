@@ -7,7 +7,7 @@ namespace AuthHub.Infrastructure.Data.Repositories;
 
 public class UserRepository(UserManager<User> userManager) : IUserRepository
 {
-    public IQueryable<User> GetAllAsync(int? page, int? pageSize, string? displayName, string? username, string? email)
+    public async Task<IEnumerable<User>> GetAllAsync(int page, int pageSize, string? displayName, string? username, string? email, CancellationToken cancellationToken)
     {
         var query = userManager.Users.AsQueryable();
         
@@ -25,8 +25,12 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
         {
             query = query.Where(u => EF.Functions.Like(u.Email, $"%{email}%"));
         }
-
-        return query.OrderBy(user => user.DisplayName);
+        
+        return await query
+            .OrderBy(user => user.DisplayName)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
     }
 
     public Task<int> CountAsync(CancellationToken cancellationToken)

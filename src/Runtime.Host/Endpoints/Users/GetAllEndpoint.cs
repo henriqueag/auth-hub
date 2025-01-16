@@ -1,5 +1,6 @@
 using AuthHub.Application.Queries.Users.GetAll;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AuthHub.Runtime.Host.Endpoints.Users;
 
@@ -13,7 +14,7 @@ public class GetAllEndpoint : IEndpoint
             .RequireAuthorization();
     }
 
-    private static async Task<IResult> GetAllAsync(int? page, int? pageSize, string? displayName, string? username, string? email, ISender sender, CancellationToken cancellationToken)
+    private static async Task<IResult> GetAllAsync([FromServices] ISender sender, int? page, int? pageSize, string? displayName, string? username, string? email, CancellationToken cancellationToken)
     {
         var query = new GetAllQuery(page, pageSize, displayName, username, email);
         var result = await sender.Send(query, cancellationToken);

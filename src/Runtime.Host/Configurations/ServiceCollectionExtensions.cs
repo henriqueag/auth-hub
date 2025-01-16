@@ -1,12 +1,13 @@
-using AuthHub.Application.Commands.Users;
 using AuthHub.Application.Commands.Users.ChangePassword;
 using AuthHub.Domain.Email;
 using AuthHub.Domain.Security.Repositories;
 using AuthHub.Domain.Security.Services;
 using AuthHub.Domain.Security.ValueObjects;
 using AuthHub.Domain.Users.Entities;
+using AuthHub.Domain.Users.Repositories;
 using AuthHub.Infrastructure.Data.Contexts;
 using AuthHub.Infrastructure.Data.Repositories;
+using AuthHub.Infrastructure.Email;
 using AuthHub.Infrastructure.Security.Services;
 using AuthHub.Runtime.Host.ErrorHandling;
 using FluentValidation;
@@ -45,6 +46,7 @@ public static class ServiceCollectionExtensions
             .AddScoped<IAuthenticationService, AuthenticationService>()
             .AddScoped<IRefreshTokenRepository, RefreshTokenRepository>()
             .AddScoped<IEmailSender, EmailSender>()
+            .AddScoped<IUserRepository, UserRepository>()
             ;
         
         services
@@ -53,7 +55,8 @@ public static class ServiceCollectionExtensions
             .AddSingleton<ISecurityTokenManager, SecurityTokenManager>()
             .AddSingleton<IEmailTemplateReader, EmailTemplateReader>()
             ;
-     
+
+        services.AddMediatR(options => options.RegisterServicesFromAssembly(typeof(ChangePasswordCommand).Assembly));
         services.AddValidatorsFromAssembly(typeof(ChangePasswordCommand).Assembly);
         services.AddHttpContextAccessor();
         services.AddDistributedMemoryCache();
@@ -122,7 +125,7 @@ public static class ServiceCollectionExtensions
         services.AddMassTransit(busConfigurator =>
         {
             busConfigurator.SetKebabCaseEndpointNameFormatter();
-            busConfigurator.AddConsumers(typeof(ServiceCollectionExtensions).Assembly);
+            busConfigurator.AddConsumers(typeof(ChangePasswordCommand).Assembly);
 
             busConfigurator.UsingInMemory((context, configurator) =>
             {

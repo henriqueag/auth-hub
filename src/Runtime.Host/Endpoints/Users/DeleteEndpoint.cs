@@ -1,5 +1,6 @@
 using AuthHub.Application.Commands.Users.Delete;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AuthHub.Runtime.Host.Endpoints.Users;
 
@@ -13,7 +14,7 @@ public class DeleteEndpoint : IEndpoint
             .RequireAuthorization(policy => policy.RequireRole("Admin"));
     }
 
-    private static async Task<IResult> DeleteAsync(Guid userId, ISender sender, CancellationToken cancellationToken)
+    private static async Task<IResult> DeleteAsync([FromServices] ISender sender, Guid userId, CancellationToken cancellationToken)
     {
         await sender.Send(new DeleteCommand(userId), cancellationToken);
         return Results.NoContent();

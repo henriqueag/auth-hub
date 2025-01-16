@@ -1,5 +1,6 @@
 using AuthHub.Application.Commands.Users.PasswordRecovery;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AuthHub.Runtime.Host.Endpoints.Users;
 
@@ -12,9 +13,10 @@ public class PasswordRecoveryEndpoint : IEndpoint
             .WithOpenApi();
     }
 
-    private static async Task<IResult> PasswordRecoveryAsync(string email, string token, ISender sender, PasswordRecoveryCommand command, CancellationToken cancellationToken)
+    private static async Task<IResult> PasswordRecoveryAsync([FromServices] ISender sender, string email, string token, PasswordRecoveryCommand payload, CancellationToken cancellationToken)
     {
-        await sender.Send(new PasswordRecoveryCommand(email, token), cancellationToken);
+        payload = payload with { Email = email, Token = token };
+        await sender.Send(payload, cancellationToken);
         return Results.Ok();
     }
 }

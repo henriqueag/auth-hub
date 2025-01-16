@@ -14,7 +14,7 @@ public class UpdateEndpoint : IEndpoint
             .RequireAuthorization(policy => policy.RequireRole("Admin"));
     }
 
-    private static async Task<IResult> UpdateUserAsync(Guid userId, UpdateCommand payload, [FromServices] ISender sender, CancellationToken cancellationToken)
+    private static async Task<IResult> UpdateUserAsync([FromServices] ISender sender, Guid userId, UpdateCommand payload, CancellationToken cancellationToken)
     {
         payload = payload with { UserId = userId };
         await sender.Send(payload, cancellationToken);

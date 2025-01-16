@@ -1,16 +1,17 @@
 using System.Net;
 using System.Net.Mail;
 using System.Text;
+using AuthHub.Domain.Email;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace AuthHub.Domain.Email;
+namespace AuthHub.Infrastructure.Email;
 
 public class EmailSender(
     IOptions<SmtpOptions> smtpOptions,
     IEmailTemplateReader templateReader,
-    ILogger<EmailSender> logger
-    ) : IEmailSender
+    ILogger<EmailSender> logger)
+    : IEmailSender
 {
     public async Task SendEmailAsync(string to, string templateName, IDictionary<string, string> templateParameters, CancellationToken cancellationToken)
     {

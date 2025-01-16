@@ -10,6 +10,8 @@
 
     <ItemGroup>
         <EmbeddedResource Include="Security\Keys\PrivateKey.xml"/>
-        <EmbeddedResource Include="Security\Keys\PublicKey.xml"/>
+        <EmbeddedResource Include="Security\Keys\PublicKey.xml"/>        
+        <EmbeddedResource Include="Email\Templates\PasswordRecovery.html" />
+        <EmbeddedResource Include="Email\Templates\TemplatesMap.json" />
     </ItemGroup>
 </Project>

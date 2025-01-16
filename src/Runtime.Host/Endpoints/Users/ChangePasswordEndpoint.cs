@@ -11,11 +11,10 @@ public class ChangePasswordEndpoint : IEndpoint
         builder
             .MapPost("api/users/password/change", ChangePasswordAsync)
             .WithTags("Users")
-            .WithOpenApi()
-            .RequireAuthorization();
+            .WithOpenApi();
     }
 
-    private static async Task<IResult> ChangePasswordAsync(ISender sender, ChangePasswordCommand payload, CancellationToken cancellationToken)
+    private static async Task<IResult> ChangePasswordAsync([FromServices] ISender sender, ChangePasswordCommand payload, CancellationToken cancellationToken)
     {
         await sender.Send(payload, cancellationToken);
         return Results.NoContent();
