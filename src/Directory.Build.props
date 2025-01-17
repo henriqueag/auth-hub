@@ -1,0 +1,22 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <NoWarn>1591</NoWarn>
+        <PlatformTarget>AnyCPU</PlatformTarget>
+
+        <TargetFramework>net8.0</TargetFramework>
+        <RootNamespace>AuthHub.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+        <AssemblyName>AuthHub.$(MSBuildProjectName)</AssemblyName>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        
+        <Authors>Henrique Aguiar</Authors>
+        <Version Condition=" '$(VersionSuffix)' != '' ">$(Version)-$(VersionSuffix)</Version>
+        <Version Condition=" '$(BuildId)' != '' ">$(Version)+$(BuildId)</Version>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>$(AssemblyName).UnitTests</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+</Project>

@@ -1,0 +1,7 @@
+{
+    "PasswordRecovery": {
+        "Subject": "Redefinição de Senha",
+        "FileName": "PasswordRecovery.html",
+        "Variables": ["User", "Link", "FullLink"]
+    }
+}

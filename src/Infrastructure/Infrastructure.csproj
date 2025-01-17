@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <ItemGroup>
+        <ProjectReference Include="..\Domain\Domain.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite"/>
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="Security\Keys\PrivateKey.xml"/>
+        <EmbeddedResource Include="Security\Keys\PublicKey.xml"/>        
+        <EmbeddedResource Include="Email\Templates\PasswordRecovery.html" />
+        <EmbeddedResource Include="Email\Templates\TemplatesMap.json" />
+    </ItemGroup>
+</Project>
