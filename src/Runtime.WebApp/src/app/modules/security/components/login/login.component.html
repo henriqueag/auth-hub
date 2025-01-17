@@ -1,0 +1,37 @@
+<div
+    class="w-full h-full flex align-items-center justify-content-center"
+    style="background-color: var(--p-neutral-100);"
+>
+    <p-card [style]="{ width: '25rem', 'max-width': '100%', overflow: 'hidden' }">
+        <ng-template pTemplate="header">
+            <div class="text-center mt-3">
+                <img src="logo.svg" alt="Logomarca" width="180px" style="max-width: 100%;">
+            </div>
+        </ng-template>
+        <ng-template pTemplate="title">
+            <span class="block text-center">Auth Hub Login</span>
+        </ng-template>
+
+        <div class="flex flex-column gap-3 mt-4 mb-2">
+            <p-floatlabel variant="on">
+                <input pInputText class="w-full" id="email" autocomplete="off" [(ngModel)]="email" />
+                <label for="email">Email</label>
+            </p-floatlabel>
+            <p-floatlabel variant="on">
+                <p-password inputId="password" inputStyleClass="w-full" styleClass="w-full" [toggleMask]="true" [feedback]="false" [(ngModel)]="password" />
+                <label for="password">Senha</label>
+            </p-floatlabel>
+            <p-button label="Entrar" styleClass="w-full" [raised]="true" [loading]="loading" />
+        </div>
+
+        <ng-template pTemplate="footer">
+            <div class="flex flex-column align-items-center">
+                <p-button label="Esqueceu sua senha?" styleClass="text-sm" [link]="true" (onClick)="navigateTo('forgot-password')" />
+                <p-button label="Alterar senha" styleClass="text-sm" [link]="true" (onClick)="navigateTo('change-password')" />
+            </div>
+            <div class="text-center mt-4">
+                <img src="logo.svg" alt="Logomarca" width="100px" style="max-width: 100%;opacity: 0.5;">
+            </div>
+        </ng-template>
+    </p-card>
+</div>
