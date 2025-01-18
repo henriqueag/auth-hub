@@ -1,5 +1,5 @@
-using AuthHub.Domain.Security.Options;
 using AuthHub.Domain.Security.Services;
+using AuthHub.Infrastructure.Security.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;

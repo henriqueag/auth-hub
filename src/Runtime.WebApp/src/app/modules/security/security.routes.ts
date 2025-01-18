@@ -2,8 +2,13 @@ import { Routes } from "@angular/router";
 
 export const SECURITY_ROUTES: Routes = [
     {
+        path: "",
+        pathMatch: "full",
+        redirectTo: "login"
+    },
+    {
         path: "login",
-        loadComponent: () => import("./components/login/login.component").then((c) => c.LoginComponent),
+        loadComponent: () => import("./components/login/login.component").then((c) => c.LoginComponent)
     },
     {
         path: "forgot-password",

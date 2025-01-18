@@ -2,10 +2,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using AuthHub.Domain.Abstractions;
 using AuthHub.Domain.Security.Entities;
-using AuthHub.Domain.Security.Options;
 using AuthHub.Domain.Security.Repositories;
 using AuthHub.Domain.Security.Services;
 using AuthHub.Domain.Users.Entities;
+using AuthHub.Infrastructure.Security.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -53,7 +53,7 @@ public class AuthenticationService(
                 Error.NotFound);
         }
 
-        if (savedRefreshToken.IsExpired(TimeSpan.FromSeconds(jwtOptions.Value.RefreshTokenLifetimeInSeconds)) || savedRefreshToken.IsRevoked)
+        if (savedRefreshToken.IsExpired(TimeSpan.FromMinutes(jwtOptions.Value.RefreshTokenLifetimeInMinutes)) || savedRefreshToken.IsRevoked)
         {
             throw new ProblemDetailsException(
                 "infra.security.authentication-service.refresh-token-expired-or-revoked",
@@ -85,7 +85,7 @@ public class AuthenticationService(
             AccessToken: accessToken,
             RefreshToken: refreshTokenValue,
             TokenType: "Bearer",
-            ExpiresIn: jwtOptions.Value.LifetimeInSeconds
+            ExpiresIn: (int)TimeSpan.FromMinutes(jwtOptions.Value.LifetimeInMinutes).TotalSeconds
         );
     }
 

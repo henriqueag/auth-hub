@@ -1,0 +1,57 @@
+<h2 style="color: var(--p-gray-600)">Listagem de Usuários</h2>
+
+<p-toolbar styleClass="mb-4">
+    <ng-template #start>
+        <p-iconfield iconPosition="left" class="ml-auto">
+            <p-inputicon>
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </p-inputicon>
+            <input
+                pInputText
+                type="text"
+                (input)="dt2.filterGlobal($event.target['value'], 'contains')"
+                placeholder="Search keyword"
+            />
+        </p-iconfield>
+    </ng-template>
+    <ng-template #end>
+        <p-button label="Incluir" icon="fa-solid fa-plus" />
+    </ng-template>
+</p-toolbar>
+
+<p-table
+    #dt2
+    dataKey="a"
+    [value]="users"
+    [rows]="1"
+    [rowHover]="true"
+    [paginator]="true"
+    [globalFilterFields]="['a', 'b']"
+>
+    <ng-template #header>
+        <tr>
+            <th pSortableColumn="a">Nome  <p-sortIcon field="a"/></th>
+            <th pSortableColumn="b">Nome de usuário  <p-sortIcon field="b"/></th>
+            <th pSortableColumn="c">Email  <p-sortIcon field="c"/></th>
+            <th pSortableColumn="d">Ativo  <p-sortIcon field="d"/></th>
+            <th pSortableColumn="e">Ações  <p-sortIcon field="e"/></th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-item>
+        <tr>
+            <td>{{ item.a }}</td>
+            <td>{{ item.b }}</td>
+            <td>{{ item.c }}</td>
+            <td>{{ item.d }}</td>
+            <td>{{ item.e }}</td>
+        </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+        <tr>
+            <td colspan="5">No customers found.</td>
+        </tr>
+    </ng-template>
+    <ng-template #summary>
+        <div class="flex items-center justify-between">No total, existem 4 usuários.</div>
+    </ng-template>
+</p-table>

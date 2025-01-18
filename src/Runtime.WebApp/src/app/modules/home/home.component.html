@@ -1,0 +1,11 @@
+<p>home works!</p>
+
+<div class="flex gap-3 mb-4">
+    <button (click)="onClick()" class="block">Call API</button>
+    <button (click)="onSignOut()" class="block">Sair</button>
+</div>
+
+<pre>{{(currentUser$ | async)|json}}</pre>
+
+<div>CurrentDate: {{currentDate.asObservable() | async}}</div>
+<div>TokenData: {{tokenDate.asObservable() | async}}</div>

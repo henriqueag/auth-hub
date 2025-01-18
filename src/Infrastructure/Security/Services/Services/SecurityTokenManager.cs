@@ -1,8 +1,8 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using AuthHub.Domain.Security.Options;
 using AuthHub.Domain.Security.Services;
+using AuthHub.Infrastructure.Security.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -19,7 +19,7 @@ public class SecurityTokenManager(IJwksManager jwksManager, IOptions<JwtOptions>
             audience: jwtOptions.Value.Audience,
             claims: claims,
             notBefore: DateTime.Now,
-            expires: DateTime.Now.AddSeconds(jwtOptions.Value.LifetimeInSeconds),
+            expires: DateTime.Now.AddMinutes(jwtOptions.Value.LifetimeInMinutes),
             signingCredentials: new SigningCredentials(jwk, jwk.Alg)
         );
 

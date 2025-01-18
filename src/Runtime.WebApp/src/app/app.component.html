@@ -1,1 +1,6 @@
-<router-outlet></router-outlet>
+@if (authService.isLoggedIn$ | async) {
+    <main-layout/>
+} @else {
+    <router-outlet/>
+}
+<p-toast position="bottom-center"></p-toast>

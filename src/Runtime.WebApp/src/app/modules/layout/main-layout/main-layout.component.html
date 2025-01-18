@@ -1,0 +1,15 @@
+<p-menubar [model]="menuItems" styleClass="border-noround">
+    <ng-template #start>
+        <a routerLink="/">
+            <img src="logo.svg" alt="Logomarca" width="132px" style="max-width: 100%;" class="m-1" />
+        </a>
+    </ng-template>
+    <ng-template #end>
+        <p-menu #menu [model]="currentUserMenuItems" [popup]="true" />
+        <p-button severity="secondary" icon="fa-solid fa-user-large" [rounded]="true" [raised]="true" (click)="menu.toggle($event)" />
+    </ng-template>
+</p-menubar>
+
+<div style="height: calc(100vh - 65px); overflow: hidden;" class="mx-8">
+    <router-outlet/>
+</div>

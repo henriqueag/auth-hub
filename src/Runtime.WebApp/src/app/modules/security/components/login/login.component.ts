@@ -1,4 +1,5 @@
-import { Component } from "@angular/core";
+import { AsyncPipe } from "@angular/common";
+import { Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { PrimeTemplate } from "primeng/api";
@@ -7,6 +8,8 @@ import { Card } from "primeng/card";
 import { FloatLabelModule } from "primeng/floatlabel";
 import { InputTextModule } from "primeng/inputtext";
 import { PasswordModule } from "primeng/password";
+import { Observable, Subscription } from "rxjs";
+import { AuthorizationService } from "../../services/authorization.service";
 
 @Component({
     selector: "app-login",
@@ -18,18 +21,33 @@ import { PasswordModule } from "primeng/password";
         FloatLabelModule,
         PasswordModule,
         InputTextModule,
-        FormsModule
+        FormsModule,
+        AsyncPipe,
     ],
-    templateUrl: "./login.component.html"
+    templateUrl: "./login.component.html",
 })
-export class LoginComponent {
-    constructor(private _router: Router) { }
+export class LoginComponent implements OnInit, OnDestroy {
+    private _router = inject(Router);
+    private _authService = inject(AuthorizationService);
 
-    email: string
-    password: string
-    loading: boolean
+    email: string = "admin@email.com";
+    password: string = "test@123";
+    loggingIn$: Observable<boolean>;
+    subscriptions = new Subscription();
+
+    ngOnInit(): void {
+        this.loggingIn$ = this._authService.loggingIn$;
+    }
+
+    ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
+    }
 
     navigateTo(...path: string[]) {
-        this._router.navigate(path)
+        this._router.navigate(path);
+    }
+
+    async onSignIn() {
+        await this._authService.signIn(this.email, this.password);
     }
 }

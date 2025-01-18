@@ -1,4 +1,4 @@
-using AuthHub.Domain.Security.Options;
+using AuthHub.Infrastructure.Security.Options;
 using Microsoft.Extensions.Options;
 
 namespace AuthHub.Runtime.Host.Configurations;
