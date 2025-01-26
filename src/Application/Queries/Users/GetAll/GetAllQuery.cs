@@ -4,4 +4,4 @@ using MediatR;
 
 namespace AuthHub.Application.Queries.Users.GetAll;
 
-public record GetAllQuery(int? Page, int? PageSize, string? DisplayName, string? Username, string? Email) : IRequest<PaginatedResponse<UserResponse>>;
+public record GetAllQuery(int? Skip, int? Limit, string? Query) : IRequest<PagedResponse<UserResponse>>;

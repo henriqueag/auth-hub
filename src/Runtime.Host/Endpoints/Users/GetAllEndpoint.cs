@@ -14,9 +14,9 @@ public class GetAllEndpoint : IEndpoint
             .RequireAuthorization();
     }
 
-    private static async Task<IResult> GetAllAsync([FromServices] ISender sender, int? page, int? pageSize, string? displayName, string? username, string? email, CancellationToken cancellationToken)
+    private static async Task<IResult> GetAllAsync([FromServices] ISender sender, int? skip, int? limit, string? q, CancellationToken cancellationToken)
     {
-        var query = new GetAllQuery(page, pageSize, displayName, username, email);
+        var query = new GetAllQuery(skip, limit, q);
         var result = await sender.Send(query, cancellationToken);
         return Results.Ok(result);
     }

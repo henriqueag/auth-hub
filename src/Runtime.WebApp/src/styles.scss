@@ -1,5 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+
 :root {
-    --font-family: "Roboto"
+    --font-family: "Nunito Sans", sans-serif;
+    scroll-behavior: smooth;
 }
 
 * {
@@ -14,20 +17,7 @@ body {
     margin: 0;
     padding: 0;
     overflow: hidden;
-}
-
-:root {
-    scroll-behavior: smooth;
-}
-
-::-webkit-scrollbar {
-    width: 8px;
-}
-
-::-webkit-scrollbar-thumb {
-    background-color: var(--gray-500);
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
+    font-family: var(--font-family);
 }
 
 a {
