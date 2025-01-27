@@ -7,11 +7,10 @@
                 <i class="fa-solid fa-magnifying-glass"></i>
             </p-inputicon>
             <input
-                pInputText
-                type="text"
+                pInputText type="text"
+                placeholder="Pesquisar"
                 [ngModel]="query"
                 (ngModelChange)="onQueryChange($event)"
-                placeholder="Pesquisar"
             />
         </p-iconfield>
     </ng-template>
@@ -20,37 +19,18 @@
     </ng-template>
 </p-toolbar>
 
-<div style="width: 100%; height: calc(100% - 178px)" >
-    <p-table [value]="[1, 1, 1, 1, 1]">
-        <ng-template #header>
-            <tr>
-                <th class="p-2"><p-skeleton height="38px"/></th>
-                <th class="p-2"><p-skeleton height="38px"/></th>
-                <th class="p-2"><p-skeleton height="38px"/></th>
-                <th class="p-2"><p-skeleton height="38px"/></th>
-                <th class="p-2"><p-skeleton height="38px"/></th>
-            </tr>
-        </ng-template>
-        <ng-template #body>
-            <tr>
-                <th class="px-1 py-1"><p-skeleton height="30px"/></th>
-                <th class="px-1 py-1"><p-skeleton height="30px"/></th>
-                <th class="px-1 py-1"><p-skeleton height="30px"/></th>
-                <th class="px-1 py-1"><p-skeleton height="30px"/></th>
-                <th class="px-1 py-1"><p-skeleton height="30px"/></th>
-            </tr>
-        </ng-template>
-    </p-table>
-
+<div style="width: 100%; height: calc(100% - 178px)">
     <p-table
         dataKey="id"
+        [columns]="columns"
         [value]="users$.asObservable() | async"
         [loading]="loading$.asObservable() | async"
+        [showLoader]="false"
         [rowHover]="true"
         [paginator]="true"
         [first]="skip"
         [rows]="limit"
-        [rowsPerPageOptions]="[5, 10]"
+        [rowsPerPageOptions]="[10, 20, 30]"
         [totalRecords]="totalRecords$.asObservable() | async"
         [showCurrentPageReport]="true"
         [currentPageReportTemplate]="'Exibindo {first} a {last} de {totalRecords} registros'"
@@ -59,13 +39,16 @@
         [lazy]="true"
         (onLazyLoad)="onLazyLoad($event)"
     >
-        <ng-template #header>
+        <ng-template #header let-columns>
             <tr>
-                <th pSortableColumn="displayName">Nome  <p-sortIcon field="displayName"/></th>
-                <th pSortableColumn="username">Nome de usuário  <p-sortIcon field="username"/></th>
-                <th pSortableColumn="email">Email  <p-sortIcon field="email"/></th>
-                <th pSortableColumn="active">Ativo  <p-sortIcon field="active"/></th>
-                <th>Ações</th>
+                @for (column of columns; track $index) {
+                    @if (column.isSortable) {
+                        <th [pSortableColumn]="column.name">{{ column.displayName }} <p-sortIcon [field]="column.name" /></th>
+                    }
+                    @else {
+                        <th>{{ column.displayName }}</th>
+                    }
+                }
             </tr>
         </ng-template>
         <ng-template #body let-item>
@@ -73,8 +56,44 @@
                 <td>{{ item.displayName }}</td>
                 <td>{{ item.username }}</td>
                 <td>{{ item.email }}</td>
-                <td>{{ item.active }}</td>
-                <td>Ações</td>
+                <td>
+                    <i
+                        class="fa-solid"
+                        [class.fa-square-check]="item.active"
+                        [class.fa-square-xmark]="!item.active"
+                        style="font-size: 22px;"
+                        [style.color]="item.active ? 'var(--p-green-500)' : 'var(--p-red-500)'"></i>
+                </td>
+                <td>
+                    <div class="grid grid-nogutter">
+                        <div class="col-6">
+                            <p-button
+                                icon="fa-solid fa-pen"
+                                size="small"
+                                severity="info"
+                                [raised]="true"
+                                [text]="true"
+                                [rounded]="true"
+                                pTooltip="Editar"
+                                tooltipPosition="bottom"
+                                (onClick)="onEdit(item.id)"
+                            />
+                        </div>
+                        <div class="col-6">
+                            <p-button
+                                icon="fa-solid fa-trash"
+                                size="small"
+                                severity="danger"
+                                [raised]="true"
+                                [text]="true"
+                                [rounded]="true"
+                                pTooltip="Excluir"
+                                tooltipPosition="bottom"
+                                (onClick)="onDelete(item.id)"
+                            />
+                        </div>
+                    </div>
+                </td>
             </tr>
         </ng-template>
         <ng-template #emptymessage>
@@ -82,8 +101,12 @@
                 <td colspan="5">Nenhum usuário encontrado.</td>
             </tr>
         </ng-template>
-        <ng-template #loadingbody>
-
+        <ng-template #loadingbody let-columns>
+            <tr style="height: 30px;">
+                @for (column of columns; track $index) {
+                    <th class="px-1 py-1"><p-skeleton height="30px"/></th>
+                }
+            </tr>
         </ng-template>
     </p-table>
 </div>

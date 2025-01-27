@@ -1,4 +1,4 @@
-import { AsyncPipe } from "@angular/common";
+import { AsyncPipe, NgClass, NgStyle } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Component, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
@@ -13,6 +13,7 @@ import { BehaviorSubject, debounceTime, distinctUntilChanged, lastValueFrom } fr
 import { PagedResponse } from "src/app/modules/shared/paged-response.model";
 import { environment } from "src/environments/environment";
 import { User } from "../../models/user.model";
+import { Tooltip } from 'primeng/tooltip';
 
 @Component({
     selector: "app-list-users",
@@ -27,6 +28,7 @@ import { User } from "../../models/user.model";
         Skeleton,
         FormsModule,
         AsyncPipe,
+        Tooltip
     ],
     templateUrl: "./list-users.component.html",
     styleUrl: "./list-users.component.scss",
@@ -38,15 +40,14 @@ export class ListUsersComponent {
 
     query?: string;
     skip: number = 0;
-    limit: number = 5;
+    limit: number = 10;
     columns = [
-        { name: "", displayName: "" },
-        { name: "", displayName: "" },
-        { name: "", displayName: "" },
-        { name: "", displayName: "" },
-        { name: "", displayName: "" },
+        { name: "displayName", displayName: "Nome", isSortable: true },
+        { name: "username", displayName: "Nome de usuário", isSortable: true },
+        { name: "email", displayName: "Email", isSortable: true },
+        { name: "active", displayName: "Ativo", isSortable: false },
+        { name: "actions", displayName: "Ações", isSortable: false },
     ]
-
     users$ = new BehaviorSubject<User[]>([]);
     loading$ = new BehaviorSubject<boolean>(false);
     totalRecords$ = new BehaviorSubject<number>(0);
@@ -69,6 +70,14 @@ export class ListUsersComponent {
         this.skip = event.first;
         this.limit = event.rows;
         await this.load();
+    }
+
+    onEdit(id) {
+
+    }
+
+    onDelete(id) {
+
     }
 
     async load() {
