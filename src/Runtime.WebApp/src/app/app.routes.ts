@@ -1,6 +1,7 @@
 import { inject } from "@angular/core";
 import { Routes } from "@angular/router";
 import { AuthGuard } from "./modules/security/guards/auth.guard";
+import { PublicAuthGuard } from "./modules/security/guards/public-auth.guard";
 
 export const routes: Routes = [
     {
@@ -11,6 +12,7 @@ export const routes: Routes = [
     {
         path: "account",
         loadChildren: () => import("src/app/modules/security/security.routes").then((c) => c.SECURITY_ROUTES),
+        canActivate: [() => inject(PublicAuthGuard).canActivate()]
     },
     {
         path: "users",

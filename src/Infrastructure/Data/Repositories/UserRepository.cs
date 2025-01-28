@@ -7,34 +7,33 @@ namespace AuthHub.Infrastructure.Data.Repositories;
 
 public class UserRepository(UserManager<User> userManager) : IUserRepository
 {
-    public async Task<IEnumerable<User>> GetAllAsync(int page, int pageSize, string? displayName, string? username, string? email, CancellationToken cancellationToken)
+    public async Task<IEnumerable<User>> GetAllAsync(int skip, int limit, string? query, CancellationToken cancellationToken)
     {
-        var query = userManager.Users.AsQueryable();
-        
-        if (!string.IsNullOrEmpty(displayName))
+        var queryable = userManager.Users.AsQueryable();
+
+        if (!string.IsNullOrEmpty(query))
         {
-            query = query.Where(u => EF.Functions.Like(u.DisplayName, $"%{displayName}%"));
+            queryable = queryable.Where(user =>
+                ToLower(user.DisplayName).Contains(ToLower(query)) ||
+                ToLower(user.UserName!).Contains(ToLower(query)) ||
+                ToLower(user.Email!).Contains(ToLower(query))
+            );
         }
 
-        if (!string.IsNullOrEmpty(username))
+        queryable = queryable.OrderBy(user => user.DisplayName);
+
+        if (skip > 0)
         {
-            query = query.Where(u => EF.Functions.Like(u.UserName, $"%{username}%"));
+            queryable = queryable.Skip(skip);
         }
 
-        if (!string.IsNullOrEmpty(email))
-        {
-            query = query.Where(u => EF.Functions.Like(u.Email, $"%{email}%"));
-        }
-        
-        return await query
-            .OrderBy(user => user.DisplayName)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync(cancellationToken);
+        return await queryable.Take(limit).ToListAsync(cancellationToken);        
     }
 
     public Task<int> CountAsync(CancellationToken cancellationToken)
     {
         return userManager.Users.CountAsync(cancellationToken);
     }
+
+    private static string ToLower(string input) => input.ToLower();
 }

@@ -23,15 +23,15 @@
     <p-table
         dataKey="id"
         [columns]="columns"
-        [value]="users$.asObservable() | async"
-        [loading]="loading$.asObservable() | async"
+        [value]="users$ | async"
+        [loading]="loading$ | async"
         [showLoader]="false"
         [rowHover]="true"
         [paginator]="true"
         [first]="skip"
         [rows]="limit"
         [rowsPerPageOptions]="[10, 20, 30]"
-        [totalRecords]="totalRecords$.asObservable() | async"
+        [totalRecords]="totalRecords$ | async"
         [showCurrentPageReport]="true"
         [currentPageReportTemplate]="'Exibindo {first} a {last} de {totalRecords} registros'"
         [scrollable]="true"
@@ -46,7 +46,7 @@
                         <th [pSortableColumn]="column.name">{{ column.displayName }} <p-sortIcon [field]="column.name" /></th>
                     }
                     @else {
-                        <th>{{ column.displayName }}</th>
+                        <th [style.width]="column.width ">{{ column.displayName }}</th>
                     }
                 }
             </tr>
@@ -65,33 +65,29 @@
                         [style.color]="item.active ? 'var(--p-green-500)' : 'var(--p-red-500)'"></i>
                 </td>
                 <td>
-                    <div class="grid grid-nogutter">
-                        <div class="col-6">
-                            <p-button
-                                icon="fa-solid fa-pen"
-                                size="small"
-                                severity="info"
-                                [raised]="true"
-                                [text]="true"
-                                [rounded]="true"
-                                pTooltip="Editar"
-                                tooltipPosition="bottom"
-                                (onClick)="onEdit(item.id)"
-                            />
-                        </div>
-                        <div class="col-6">
-                            <p-button
-                                icon="fa-solid fa-trash"
-                                size="small"
-                                severity="danger"
-                                [raised]="true"
-                                [text]="true"
-                                [rounded]="true"
-                                pTooltip="Excluir"
-                                tooltipPosition="bottom"
-                                (onClick)="onDelete(item.id)"
-                            />
-                        </div>
+                    <div class="flex flex-row gap-3">
+                        <p-button
+                            icon="fa-solid fa-pen"
+                            size="small"
+                            severity="info"
+                            [raised]="true"
+                            [text]="true"
+                            [rounded]="true"
+                            pTooltip="Editar"
+                            tooltipPosition="bottom"
+                            (onClick)="onEdit(item.id)"
+                        />
+                        <p-button
+                            icon="fa-solid fa-trash"
+                            size="small"
+                            severity="danger"
+                            [raised]="true"
+                            [text]="true"
+                            [rounded]="true"
+                            pTooltip="Excluir"
+                            tooltipPosition="bottom"
+                            (onClick)="onDelete(item)"
+                        />
                     </div>
                 </td>
             </tr>
@@ -110,3 +106,5 @@
         </ng-template>
     </p-table>
 </div>
+
+<p-confirmdialog [draggable]="false"/>

@@ -1,4 +1,5 @@
 using AuthHub.Domain.Users.Entities;
+using Bogus;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,24 +22,43 @@ public class DatabaseInitializer(IServiceScopeFactory factory)
     private static async Task SeedAsync(IServiceProvider services)
     {
         var userManager = services.GetRequiredService<UserManager<User>>();
-        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-        User[] users =
-        [
-            new("Administrador", "admin", "admin@email.com"),
-            new("Usuário de Teste 1", "test1", "test1@email.com")
-        ];
+        if (await userManager.Users.CountAsync() > 40) return;
 
-        IdentityRole[] roles =
-        [
-            new("Admin"),
-            new("Default")
-        ];
+        // var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-        foreach (var user in users) await userManager.CreateAsync(user, "test@123");
-        foreach (var role in roles) await roleManager.CreateAsync(role);
+        // User[] users =
+        // [
+        //     new("Administrador", "admin", "admin@email.com"),
+        //     new("Usuário de Teste 1", "test1", "test1@email.com")
+        // ];
 
-        await userManager.AddToRoleAsync(users[0], roles[0].Name!);
-        await userManager.AddToRoleAsync(users[1], roles[1].Name!);
+        // IdentityRole[] roles =
+        // [
+        //     new("Admin"),
+        //     new("Default")
+        // ];
+
+        // foreach (var user in users) await userManager.CreateAsync(user, "test@123");
+        // foreach (var role in roles) await roleManager.CreateAsync(role);
+
+        // await userManager.AddToRoleAsync(users[0], roles[0].Name!);
+        // await userManager.AddToRoleAsync(users[1], roles[1].Name!);
+
+        foreach (var user in GetFakeUsers())
+        {
+            await userManager.CreateAsync(user, "test@123");
+        }
+    }
+
+    private static List<User> GetFakeUsers() 
+    {
+        return new Faker<User>()
+            .CustomInstantiator((faker) => new User(faker.Person.FullName, faker.Person.UserName, faker.Person.Email) 
+            {
+                Active = faker.Random.Int() % 2 == 0,
+                EmailConfirmed = true
+            })
+            .Generate(40);
     }
 }

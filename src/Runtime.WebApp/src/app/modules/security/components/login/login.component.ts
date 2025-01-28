@@ -32,11 +32,11 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     email: string = "admin@email.com";
     password: string = "test@123";
-    loggingIn$: Observable<boolean>;
+    isLoginInProgress$: Observable<boolean>;
     subscriptions = new Subscription();
 
     ngOnInit(): void {
-        this.loggingIn$ = this._authService.loggingIn$;
+        this.isLoginInProgress$ = this._authService.isLoginInProgress$();
     }
 
     ngOnDestroy(): void {

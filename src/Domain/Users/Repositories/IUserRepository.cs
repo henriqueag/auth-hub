@@ -4,6 +4,6 @@ namespace AuthHub.Domain.Users.Repositories;
 
 public interface IUserRepository
 {
-    Task<IEnumerable<User>> GetAllAsync(int page, int pageSize, string? displayName, string? username, string? email, CancellationToken cancellationToken);
+    Task<IEnumerable<User>> GetAllAsync(int skip, int limit, string? query, CancellationToken cancellationToken);
     Task<int> CountAsync(CancellationToken cancellationToken);
 }

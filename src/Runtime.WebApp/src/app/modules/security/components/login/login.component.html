@@ -21,7 +21,7 @@
                 <p-password inputId="password" inputStyleClass="w-full" styleClass="w-full" [toggleMask]="true" [feedback]="false" [(ngModel)]="password" />
                 <label for="password">Senha</label>
             </p-floatlabel>
-            <p-button label="Entrar" styleClass="w-full" [raised]="true" [loading]="loggingIn$ | async" (onClick)="onSignIn()" />
+            <p-button label="Entrar" styleClass="w-full" [raised]="true" [loading]="isLoginInProgress$ | async" (onClick)="onSignIn()" />
         </div>
 
         <ng-template pTemplate="footer">

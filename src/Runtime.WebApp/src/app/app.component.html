@@ -1,6 +1,41 @@
-@if (authService.isLoggedIn$ | async) {
-    <main-layout/>
-} @else {
+<ng-container *ngIf="authService.isLoggedIn$() | async; else loginLayoutTemplate">
+    <ng-container *ngIf="!(authService.isLoadingAfterLogin$() | async); else loadingTemplate">
+        <main-layout/>
+    </ng-container>
+</ng-container>
+
+<ng-template #loadingTemplate>
+    <div
+        class="w-full h-full flex align-items-center justify-content-center"
+        style="background-color: var(--p-neutral-100);"
+    >
+        <p-card [style]="{ width: '18rem', 'max-width': '100%', overflow: 'hidden' }">
+            <ng-template pTemplate="header">
+                <div class="text-center mt-3">
+                    <img src="logo.svg" alt="Logomarca" width="80px" style="max-width: 100%;">
+                </div>
+            </ng-template>
+
+            <div class="text-center">
+                <p-progressSpinner
+                    strokeWidth="6"
+                    animationDuration="1.5s"
+                    [style]="{ 'width': '70px', 'height': '70px' }"
+                />
+            </div>
+
+            <ng-template pTemplate="footer">
+                <div class="text-center">
+                    <h2>Olá, {{ (currentUser$ | async)?.displayName || 'Usuário' }}</h2>
+                    <p>Inicializando sua conta...</p>
+                </div>
+            </ng-template>
+        </p-card>
+    </div>
+</ng-template>
+
+<ng-template #loginLayoutTemplate>
     <router-outlet/>
-}
+</ng-template>
+
 <p-toast position="bottom-center"></p-toast>

@@ -1,11 +1,11 @@
 import { Component, inject } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
 import { MenuItem } from "primeng/api";
+import { Button } from "primeng/button";
 import { Menu } from "primeng/menu";
 import { Menubar } from "primeng/menubar";
-import { Observable } from "rxjs";
+import { Observable, take } from "rxjs";
 import { AuthorizationService } from "../../security/services/authorization.service";
-import { Button } from "primeng/button";
 import { UserManagerService } from "../../users/services/user-manager.service";
 
 @Component({
@@ -15,14 +15,13 @@ import { UserManagerService } from "../../users/services/user-manager.service";
         RouterOutlet, //
         Menu,
         Menubar,
-        Button,
+        Button
     ],
     providers: [UserManagerService],
     templateUrl: "./main-layout.component.html",
 })
 export class MainLayoutComponent {
     private _authService = inject(AuthorizationService);
-    private _userManager = inject(UserManagerService);
 
     menuItems: MenuItem[] = [
         {
@@ -42,26 +41,28 @@ export class MainLayoutComponent {
         },
     ];
 
+    isLoggedIn$: Observable<boolean>;
     currentUserMenuItems: MenuItem[] = [];
 
-    isLoggedIn$: Observable<boolean>;
-
     async ngOnInit() {
-        this.isLoggedIn$ = this._authService.isLoggedIn$;
+        this.isLoggedIn$ = this._authService.isLoggedIn$();
+        this._authService.getCurrentUser$()
+            .pipe(take(2))
+            .subscribe(currentUser => {
+                if (!currentUser) return;
 
-        await this._userManager.getCurrentUser().then((user) =>
-            this.currentUserMenuItems = [
-                {
-                    label: user.displayName,
-                    items: [
-                        {
-                            label: "Sair",
-                            icon: "fa-solid fa-right-from-bracket",
-                            command: () => this._authService.signOut(),
-                        },
-                    ],
-                },
-            ]
-        );
+                this.currentUserMenuItems = [
+                    {
+                        label: currentUser.displayName,
+                        items: [
+                            {
+                                label: "Sair",
+                                icon: "fa-solid fa-right-from-bracket",
+                                command: () => this._authService.signOut(),
+                            },
+                        ],
+                    },
+                ]
+            })
     }
 }
